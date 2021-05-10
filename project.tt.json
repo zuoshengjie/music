@@ -1,0 +1,9 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "my-music",
+  "appid": "touristappid",
+  "setting": {
+    "es6": false,
+    "minified": false
+  }
+}
