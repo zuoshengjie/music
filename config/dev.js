@@ -1,9 +1,17 @@
 module.exports = {
   env: {
-    NODE_ENV: '"development"'
+    NODE_ENV: '"development"',
   },
-  defineConstants: {
-  },
+  defineConstants: {},
   mini: {},
-  h5: {}
-}
+  h5: {
+    devServer: {
+      proxy: {
+        '/mg': {
+          target: 'http://zsjymy.top:3400',
+          pathRewrite: { '^/mg': '' },
+        },
+      },
+    },
+  },
+};
