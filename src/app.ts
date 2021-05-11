@@ -4,7 +4,10 @@ import './app.less'
 
 class App extends Component {
 
-  componentDidMount () {}
+  componentDidMount () {
+    const vh = window.innerHeight;
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+  }
 
   componentDidShow () {}
 
