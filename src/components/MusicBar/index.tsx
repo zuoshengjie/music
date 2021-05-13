@@ -19,7 +19,8 @@ const MusicBar = () => {
 
   const { musicName, author = [], albumPicUrl } = musicInfo;
 
-  const handlePlay = () => {
+  const handlePlay = (e) => {
+    e.stopPropagation();
     if (isPlay) {
       innerAudioContext.pause();
     } else {

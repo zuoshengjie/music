@@ -3,7 +3,6 @@ import { View, ScrollView, Text, Image } from '@tarojs/components';
 import { musicTypeService } from '@/utils/music/musicTypeList';
 import { MusicContext } from '@/app';
 import { format, scrollToView } from '@/utils/utils';
-import { useUpdateEffect } from 'ahooks';
 import styles from './index.module.less';
 
 const MusicDetail = () => {
@@ -25,7 +24,6 @@ const MusicDetail = () => {
   console.log(musicInfo, 'musicInfo');
   useEffect(() => {
     const getMusicDetail = async (id) => {
-      console.log(musicTypeService, 'musicTypeService');
       const detail = await musicTypeService[musicType]?.getSongDetail(id);
       setMusicInfo({
         musicInfo: { ...musicInfo, ...detail },
@@ -34,7 +32,7 @@ const MusicDetail = () => {
     getMusicDetail(cid);
   }, [cid]);
 
-  useUpdateEffect(() => {
+  useEffect(() => {
     const list = lyric.split(/[\n]/).map((item) => {
       const d = item.split(/\[(.+?)\]/);
       return { time: d[1], lyc: d[2] };
@@ -43,10 +41,8 @@ const MusicDetail = () => {
       return { ...p, [v.time?.split('.')[0]]: i };
     }, {});
     setLyricList(list);
-    console.log('innerAudioContext');
-    const update = (v) => {
-      console.log(format(v.timeStamp / 1000), 'format(v.timeStamp / 1000)');
-      const c = currentList[format(v.timeStamp / 1000)];
+    const update = () => {
+      const c = currentList[format(innerAudioContext.currentTime)];
       if (c) {
         setLyricCurrent(c);
         scrollToView(lyricRef.current, Math.max(30 * c - 100, 0));
@@ -54,7 +50,6 @@ const MusicDetail = () => {
     };
     innerAudioContext.onTimeUpdate(update);
     return () => {
-      console.log('unEffect')
       innerAudioContext.offTimeUpdate(update);
     };
   }, [lyric]);
@@ -75,7 +70,7 @@ const MusicDetail = () => {
               return (
                 <View
                   className={styles.lyc}
-                  style={lyricCurrent - 1 === i ? { color: 'red' } : {}}
+                  style={lyricCurrent === i ? { color: 'red' } : {}}
                   key={item.time + item.lyc}
                 >
                   {item.lyc}

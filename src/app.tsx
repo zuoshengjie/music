@@ -15,7 +15,6 @@ export const MusicContext = React.createContext({
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log('app constructor');
     innerAudioContext.autoplay = true;
     innerAudioContext.onPlay(() => {
       console.log('播放');

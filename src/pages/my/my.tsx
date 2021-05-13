@@ -37,9 +37,10 @@ const My = () => {
       const u = await musicTypeService[type].getSongUrl(detail.id);
       url = u;
     }
-    innerAudioContext.stop();
-    innerAudioContext.src = url;
-    setMusicInfo({ musicInfo: detail });
+    if (innerAudioContext.src !== url){
+      innerAudioContext.src = url;
+      setMusicInfo({ musicInfo: detail });
+    }
     Taro.navigateTo({url:'/pages/musicDetail/musicDetail'})
   };
 
@@ -47,7 +48,7 @@ const My = () => {
     setLatelyMusic(Taro.getStorageSync('lately') || []);
     setCurrent(c);
   };
-
+  console.log(musicInfo,'my-musicInfo');
   return (
     <View>
       <View className={styles.top}>
