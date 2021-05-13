@@ -63,6 +63,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.0",
     "stylelint": "9.3.0",
-    "typescript": "^4.1.0"
+    "typescript": "^4.1.0",
+    "@tarojs/cli": "3.2.8"
   }
 }
