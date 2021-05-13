@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import Taro from '@tarojs/taro';
+import { useEffect, useState } from 'react';
 import { View, ScrollView, Text, Image } from '@tarojs/components';
-import { AtActivityIndicator, AtLoadMore } from 'taro-ui';
+import { AtActivityIndicator } from 'taro-ui';
 import { video } from '@/assets/images';
 import { useUpdateEffect, useLockFn, useDebounceFn } from 'ahooks';
 import styles from './index.module.less';
@@ -14,17 +15,17 @@ const differenceBy = (arr, key) => {
 };
 
 const MusicList = (props) => {
-  const { service, params, onItemClick, type } = props;
+  const { service, params, onItemClick, type, data, height } = props;
   const [pageNo, setPageNo] = useState(1);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(data || []);
   const [isNoMore, setIsNoMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const getData = useLockFn(async (pageN) => {
     setLoading(true);
-    const { success, data } = await service(params, pageN);
+    const { success, data: sData } = await service(params, pageN);
     if (success) {
-      const { rows, totalCount, pageNum, pageSize } = data;
+      const { rows, totalCount, pageNum, pageSize } = sData;
       if (pageNum * pageSize >= totalCount) {
         setIsNoMore(true);
       }
@@ -49,7 +50,14 @@ const MusicList = (props) => {
     },
   );
 
+  useEffect(() => {
+    setList(data || []);
+  }, [data]);
+
   const onScroll = async (e) => {
+    if (data?.length) {
+      return;
+    }
     const { scrollTop, scrollHeight } = e.detail;
     if (scrollTop >= scrollHeight - e.target.clientHeight - 300) {
       debounceGetData();
@@ -60,12 +68,26 @@ const MusicList = (props) => {
     getData(1);
   }, [params]);
 
+  const itemClick = (item, index) => {
+    const val = Taro.getStorageSync('lately') || [];
+    const newLately = { ...item, musicType: type || item.musicType };
+    const i = val.findIndex(
+      (v) => v.id + v.musicType === newLately.id + newLately.musicType,
+    );
+    if (i >= 0) {
+      Taro.setStorageSync('lately', [...val.splice(i, 1), ...val]);
+    } else {
+      Taro.setStorageSync('lately', [newLately, ...val]);
+    }
+    onItemClick(item, index, type || item.musicType);
+  };
   return (
     <ScrollView
       className={styles['scroll-view']}
       scrollY
       showScrollbar
       onScroll={onScroll}
+      style={{ height }}
       // onScrollToLower={onScrollToLower}
       // lowerThreshold={300}
     >
@@ -75,7 +97,10 @@ const MusicList = (props) => {
             <View
               key={item.id}
               onClick={() => {
-                onItemClick(item, index, type);
+                itemClick(
+                  { ...item, musicType: item.musicType || type },
+                  index,
+                );
               }}
               className={styles['list-item']}
             >
@@ -83,7 +108,7 @@ const MusicList = (props) => {
                 <View className={styles.num}>{index + 1}</View>
                 <View>
                   <View className={styles['music-name']}>{item.musicName}</View>
-                  <Text>{item.author.map((author) => author.name)}</Text> -
+                  <Text>{item.author?.map((author) => author.name)}</Text> -
                   <Text>{item.albumName}</Text>
                 </View>
               </View>

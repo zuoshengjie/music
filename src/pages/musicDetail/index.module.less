@@ -1,0 +1,40 @@
+.music-detail{
+  width: 100%;
+  height: 100vh;
+  .music-detail-bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    filter: blur(50PX);
+  }
+}
+.music-pic{
+  border-radius: 50%;
+  width: 200PX;
+  height: 200PX;
+}
+.music-content{
+  width: 100%;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  text-align: center;
+}
+.music-lyric{
+  height: 200PX;
+  overflow: auto;
+}
+.lyric-box{
+  transition: 0.5s;
+}
+.lyc{
+  height: 30PX;
+  line-height: 30PX;
+  font-size: 14PX;
+}

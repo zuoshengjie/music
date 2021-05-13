@@ -11,6 +11,7 @@ const transList = (list) => {
     albumPicUrl: item.al.picUrl,
     albumName: item.al.name,
     albumId: item.al.id,
+    cid: item.id,
   }));
 };
 
@@ -49,12 +50,14 @@ export const getSongUrl = (id: number) => {
   return wyyRequest({
     url: `/wyy/song/url`,
     data: { id },
+  }).then((res) => {
+    return res.data[0].url;
   });
 };
-//
-// export const getSongUrl = (id: number) => {
-//   return wyyRequest({
-//     url: `/wyy/song/url`,
-//     data: { id },
-//   });
-// };
+
+export const getSongDetail = (cid: number) => {
+  return wyyRequest({
+    url: `/lyric`,
+    data: { id: cid },
+  })
+};

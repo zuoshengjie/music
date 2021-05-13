@@ -1,22 +1,41 @@
-import { useState } from 'react';
+import Taro from '@tarojs/taro';
+import { useState, useContext } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import { play, stop, list } from '@/assets/images';
 import styles from './index.module.less';
+import { MusicContext } from '@/app';
 
-interface MusicBarProps {
-  musicName: string;
-  author: [];
-  albumPicUrl: string;
-  isPlay: boolean;
-  handlePlay: () => void;
-}
+// interface MusicBarProps {
+//   musicName: string;
+//   author: [];
+//   albumPicUrl: string;
+//   isPlay: boolean;
+//   handlePlay: () => void;
+// }
 
-const MusicBar = (props: MusicBarProps) => {
-  const { musicName, author = [], albumPicUrl, isPlay, handlePlay } = props;
+const MusicBar = () => {
+  const { innerAudioContext, setMusicInfo, musicInfo, isPlay } =
+    useContext(MusicContext);
+
+  const { musicName, author = [], albumPicUrl } = musicInfo;
+
+  const handlePlay = () => {
+    if (isPlay) {
+      innerAudioContext.pause();
+    } else {
+      innerAudioContext.play();
+    }
+  };
+
+  const handleMusicBar = () => {
+    Taro.navigateTo({url:'/pages/musicDetail/musicDetail'})
+  }
+
   return (
     <View
       className={styles['music-bar']}
       style={{ display: musicName ? 'flex' : 'none' }}
+      onClick={handleMusicBar}
     >
       <View className={styles['music-bar-left']}>
         <Image src={albumPicUrl} className={styles.pic} />

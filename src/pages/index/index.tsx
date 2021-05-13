@@ -1,21 +1,11 @@
 ﻿import { useState, useContext } from 'react';
 import { View } from '@tarojs/components';
 import { AtSearchBar, AtTabs, AtTabsPane, AtMessage } from 'taro-ui';
-import { search } from '@/utils/music/mg';
-import {
-  search as wyySearch,
-  getSongUrl as wyyGetSongUrl,
-} from '@/utils/music/wyy';
 import MusicBar from '@/components/MusicBar';
 import MusicList from '@/components/MusicList';
 import { MusicContext } from '@/app';
+import { musicTypeList, musicTypeService } from '@/utils/music/musicTypeList';
 import styles from './index.module.less';
-
-const musicTypeList = [
-  { title: '咪咕音乐' },
-  { title: '酷我音乐' },
-  { title: '网易云音乐' },
-];
 
 const Index = () => {
   const [searchInputValue, setSearchInputValue] = useState('');
@@ -29,21 +19,11 @@ const Index = () => {
     setSearchValue(searchInputValue);
   };
 
-  const mgService = async (params, pageNum) => {
-    const { list = [], total = 0 } = await search(params, pageNum);
-    return {
-      success: true,
-      data: {
-        pageNum,
-        pageSize: 20,
-        rows: list,
-        totalCount: total,
-      },
-    };
-  };
-
-  const wyyService = async (params, pageNum) => {
-    const { list = [], total = 0 } = await wyySearch(params, pageNum);
+  const service = async (params, pageNum, type) => {
+    const { list = [], total = 0 } = await musicTypeService[type].search(
+      params,
+      pageNum,
+    );
     return {
       success: true,
       data: {
@@ -58,22 +38,13 @@ const Index = () => {
   const handleItemClick = async (detail, _, type) => {
     let { url } = detail;
     if (!url) {
-      if (type === 'wyy') {
-        const { data } = await wyyGetSongUrl(detail.id);
-        url = data?.[0]?.url;
-      }
+      const u = await musicTypeService[type].getSongUrl(detail.id);
+      url = u;
     }
     innerAudioContext.src = url;
     setMusicInfo({ musicInfo: detail });
   };
 
-  const handleMusicBarPlay = () => {
-    if (isPlay) {
-      innerAudioContext.pause();
-    } else {
-      innerAudioContext.play();
-    }
-  };
   return (
     <View className={styles.index}>
       <AtMessage />
@@ -90,10 +61,10 @@ const Index = () => {
       >
         <AtTabsPane current={current} index={0}>
           <MusicList
-            service={mgService}
+            service={(params, pageNum) => service(params, pageNum, 'mg')}
             params={searchValue}
             onItemClick={handleItemClick}
-            type='mg'
+            type="mg"
           />
         </AtTabsPane>
         <AtTabsPane current={current} index={1}>
@@ -101,20 +72,14 @@ const Index = () => {
         </AtTabsPane>
         <AtTabsPane current={current} index={2}>
           <MusicList
-            service={wyyService}
+            service={(params, pageNum) => service(params, pageNum, 'wyy')}
             params={searchValue}
             onItemClick={handleItemClick}
-            type='wyy'
+            type="wyy"
           />
         </AtTabsPane>
       </AtTabs>
-      <MusicBar
-        author={musicInfo.author}
-        musicName={musicInfo.musicName}
-        isPlay={isPlay}
-        albumPicUrl={musicInfo.albumPicUrl}
-        handlePlay={handleMusicBarPlay}
-      />
+      <MusicBar />
     </View>
   );
 };

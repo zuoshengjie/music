@@ -2,6 +2,7 @@ export default {
   pages: [
     'pages/index/index',
     'pages/my/my',
+    'pages/musicDetail/musicDetail',
   ],
   tabBar: {
     list: [{
