@@ -40,6 +40,8 @@
     "@tarojs/react": "3.2.8",
     "@tarojs/runtime": "3.2.8",
     "@tarojs/taro": "3.2.8",
+    "ahooks": "^2.10.3",
+    "default-passive-events": "^2.0.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "taro-ui": "^3.0.0-alpha.10"
@@ -53,6 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "babel-preset-taro": "3.2.8",
+    "default-passive-events": "^2.0.0",
     "eslint": "^6.8.0",
     "eslint-config-taro": "3.2.8",
     "eslint-plugin-import": "^2.12.0",

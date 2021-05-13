@@ -11,6 +11,10 @@ module.exports = {
           target: 'http://zsjymy.top:3400',
           pathRewrite: { '^/mg': '' },
         },
+        '/wyy': {
+          target: 'http://zsjymy.top:3401',
+          pathRewrite: { '^/wyy': '' },
+        },
       },
     },
   },

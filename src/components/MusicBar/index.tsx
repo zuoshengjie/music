@@ -4,25 +4,35 @@ import { play, stop, list } from '@/assets/images';
 import styles from './index.module.less';
 
 interface MusicBarProps {
-  name: string;
-  author: string;
-  picUrl: string;
+  musicName: string;
+  author: [];
+  albumPicUrl: string;
   isPlay: boolean;
+  handlePlay: () => void;
 }
 
 const MusicBar = (props: MusicBarProps) => {
-  const { name, author, picUrl, isPlay } = props;
+  const { musicName, author = [], albumPicUrl, isPlay, handlePlay } = props;
   return (
-    <View className={styles['music-bar']}>
+    <View
+      className={styles['music-bar']}
+      style={{ display: musicName ? 'flex' : 'none' }}
+    >
       <View className={styles['music-bar-left']}>
-        <Image src={picUrl} className={styles.pic} />
+        <Image src={albumPicUrl} className={styles.pic} />
         <View>
-          <Text>{name}</Text>
-          <Text className={styles.author}> - {author}</Text>
+          <Text>{musicName}</Text>
+          <Text className={styles.author}>
+            - {author.map((item: any) => item.name)}
+          </Text>
         </View>
       </View>
       <View className={styles['music-bar-right']}>
-        <Image src={isPlay ? play : stop} className={styles.icon} />
+        <Image
+          src={isPlay ? stop : play}
+          className={styles.icon}
+          onClick={handlePlay}
+        />
         <Image src={list} className={styles.icon} />
       </View>
     </View>

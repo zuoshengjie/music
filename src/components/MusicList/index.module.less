@@ -1,1 +1,44 @@
 
+
+.scroll-view {
+  height: calc(var(--vh, 100vh) - 94PX - 53PX - 55PX);
+  &::-webkit-scrollbar{
+    display: initial;
+  }
+  .list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-size: 12PX;
+    font-weight: 300;
+    &-left {
+      display: flex;
+      align-items: center;
+      .num{
+        //margin: 0 40px 0 20px;
+        margin: 0 20px 0 0;
+        font-size: 14PX;
+      }
+    }
+    .music-name {
+      font-size: 14PX;
+      font-weight: 400;
+    }
+  }
+  .video-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
+.loading{
+  justify-content: center;
+  padding: 40px;
+  box-sizing: border-box;
+}
+.empty{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #9b9b9b;
+}
