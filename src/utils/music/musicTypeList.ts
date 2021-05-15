@@ -19,7 +19,7 @@ export const musicTypeList = [
       getSongDetail: mgGetSongDetail,
     },
   },
-  { title: '酷我音乐', key: 'kw' },
+  // { title: '酷我音乐', key: 'kw' },
   {
     title: '网易云音乐',
     key: 'wyy',

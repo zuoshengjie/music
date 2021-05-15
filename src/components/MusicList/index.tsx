@@ -1,18 +1,11 @@
 import Taro from '@tarojs/taro';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { View, ScrollView, Text, Image } from '@tarojs/components';
 import { AtActivityIndicator } from 'taro-ui';
 import { video } from '@/assets/images';
 import { useUpdateEffect, useLockFn, useDebounceFn } from 'ahooks';
 import styles from './index.module.less';
-
-const differenceBy = (arr, key) => {
-  return Object.values(
-    arr.reduce((p, c) => {
-      return { ...p, [c[key]]: c };
-    }, {}),
-  );
-};
+import { MusicContext } from '@/app';
 
 const MusicList = (props) => {
   const { service, params, onItemClick, type, data, height } = props;
@@ -20,6 +13,8 @@ const MusicList = (props) => {
   const [list, setList] = useState(data || []);
   const [isNoMore, setIsNoMore] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { musicInfo } = useContext(MusicContext);
 
   const getData = useLockFn(async (pageN) => {
     setLoading(true);
@@ -81,6 +76,7 @@ const MusicList = (props) => {
     }
     onItemClick(item, index, type || item.musicType);
   };
+
   return (
     <ScrollView
       className={styles['scroll-view']}
@@ -91,38 +87,43 @@ const MusicList = (props) => {
       // onScrollToLower={onScrollToLower}
       // lowerThreshold={300}
     >
-      {list.length ? (
-        list.map((item: any, index) => {
-          return (
-            <View
-              key={item.id}
-              onClick={() => {
-                itemClick(
-                  { ...item, musicType: item.musicType || type },
-                  index,
-                );
-              }}
-              className={styles['list-item']}
-            >
-              <View className={styles['list-item-left']}>
-                <View className={styles.num}>{index + 1}</View>
-                <View>
-                  <View className={styles['music-name']}>{item.musicName}</View>
-                  <Text>{item.author?.map((author) => author.name)}</Text> -
-                  <Text>{item.albumName}</Text>
+      {list.length
+        ? list.map((item: any, index) => {
+            return (
+              <View
+                key={item.id}
+                onClick={() => {
+                  itemClick(
+                    { ...item, musicType: item.musicType || type },
+                    index,
+                  );
+                }}
+                className={styles['list-item']}
+                style={
+                  musicInfo.id + musicInfo.musicType ===
+                  item.id + (item.musicType || type)
+                    ? { color: 'var(--color-brand)' }
+                    : {}
+                }
+              >
+                <View className={styles['list-item-left']}>
+                  <View className={styles.num}>{index + 1}</View>
+                  <View>
+                    <View className={styles['music-name']}>
+                      {item.musicName}
+                    </View>
+                    <Text>{item.author?.map((author) => author.name)}</Text> -
+                    <Text>{item.albumName}</Text>
+                  </View>
                 </View>
+                {!!item.mvId && (
+                  <Image src={video} className={styles['video-icon']} />
+                )}
               </View>
-              {!!item.mvId && (
-                <Image src={video} className={styles['video-icon']} />
-              )}
-            </View>
-          );
-        })
-      ) : (
-        <View className={styles.empty}>搜你所想~</View>
-      )}
+            );
+          })
+        : !loading && <View className={styles.empty}>搜你所想~</View>}
       <AtActivityIndicator
-        // mode="center"
         content="加载中"
         size={32}
         className={styles.loading}

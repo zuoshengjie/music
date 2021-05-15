@@ -1,54 +1,51 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
+import { View, Text, Input } from '@tarojs/components';
 import { avatar } from '@/assets/images';
-import { AtAvatar, AtTabs, AtTabsPane } from 'taro-ui';
-import styles from './index.module.less';
+import { AtAvatar, AtTabs, AtTabsPane, AtButton } from 'taro-ui';
 import MusicList from '@/components/MusicList';
 import { MusicContext } from '@/app';
-import { getSongUrl as mgGetSongUrl } from '@/utils/music/mg';
-import { getSongUrl as wyyGetSongUrl } from '@/utils/music/wyy';
-
+import { musicTypeService } from '@/utils/music/musicTypeList';
 import MusicBar from '@/components/MusicBar';
-
-const musicTypeList = [
-  { title: '咪咕音乐', key: 'mg', service: { getSongUrl: mgGetSongUrl } },
-  { title: '酷我音乐', key: 'kw' },
-  { title: '网易云音乐', key: 'wyy', service: { getSongUrl: wyyGetSongUrl } },
-];
-
-const musicTypeService = musicTypeList.reduce((p, v) => {
-  return { ...p, [v.key]: v.service };
-}, {});
+import styles from './index.module.less';
 
 const My = () => {
+  const colorRef = useRef();
   const [current, setCurrent] = useState(0);
   const [latelyMusic, setLatelyMusic] = useState([]);
-  const { innerAudioContext, setMusicInfo, musicInfo, isPlay } =
+  const { innerAudioContext, setMusicInfo, musicInfo, playList } =
     useContext(MusicContext);
 
   useDidShow(() => {
     setLatelyMusic(Taro.getStorageSync('lately') || []);
   });
-
   const handleItemClick = async (detail, _, type) => {
     let { url } = detail;
+
     if (!url) {
       const u = await musicTypeService[type].getSongUrl(detail.id);
       url = u;
     }
-    if (innerAudioContext.src !== url){
+    if (innerAudioContext.src !== url) {
       innerAudioContext.src = url;
-      setMusicInfo({ musicInfo: detail });
+      setMusicInfo({ musicInfo: { ...detail, url }, playList: latelyMusic });
     }
-    Taro.navigateTo({url:'/pages/musicDetail/musicDetail'})
+
+    Taro.navigateTo({ url: '/pages/musicDetail/musicDetail' });
   };
 
   const onTabsClick = (c) => {
     setLatelyMusic(Taro.getStorageSync('lately') || []);
     setCurrent(c);
   };
-  console.log(musicInfo,'my-musicInfo');
+
+  const setColorBrand = () => {
+    document.documentElement.style.setProperty(
+      '--color-brand',
+      colorRef.current.value,
+    );
+  };
+
   return (
     <View>
       <View className={styles.top}>
@@ -61,18 +58,37 @@ const My = () => {
       <AtTabs
         current={current}
         scroll
-        tabList={[{ title: `最近/${latelyMusic.length}` }, { title: '收藏' }]}
+        tabList={[
+          { title: `最近/${latelyMusic.length}` },
+          { title: '收藏' },
+          { title: '设置' },
+        ]}
         onClick={onTabsClick}
       >
         <AtTabsPane current={current} index={0}>
           <MusicList
-            height='auto'
+            height="auto"
             data={latelyMusic}
             onItemClick={handleItemClick}
           />
         </AtTabsPane>
         <AtTabsPane current={current} index={1}>
-          <View>酷我音乐</View>
+          <View>收藏</View>
+        </AtTabsPane>
+        <AtTabsPane current={current} index={2}>
+          <View>
+            <View className={styles.color}>
+              <Text>设置主题色</Text>
+              <Input
+                type="color"
+                ref={colorRef}
+                className={styles['color-input']}
+              />
+              <AtButton type="primary" size="small" onClick={setColorBrand}>
+                确定
+              </AtButton>
+            </View>
+          </View>
         </AtTabsPane>
       </AtTabs>
       <MusicBar />

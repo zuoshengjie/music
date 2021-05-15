@@ -1,6 +1,6 @@
 export const format = (value: number) => {
   // 时间转换
-  if (!value) return '';
+  if (!value) return '00:00';
   let interval = Math.floor(value);
   let minute = Math.floor(interval / 60)
     .toString()
@@ -39,7 +39,7 @@ const tween = {
 export function sineaseOut(t: number, b: number, c: number, d: number) {
   return c * ((t = t / d - 1) * t * t + 1) + b;
 }
-
+//      return (c * t) / d + b;
 /**
  * 将元素滚动到可见位置
  * @param scroller 要滚动的元素
@@ -55,10 +55,29 @@ export function scrollToView(scroller: HTMLElement, top: number = 0) {
     if (!start) {
       start = timestamp;
     }
-    let stepScroll = tween.linear(timestamp - start, 0, top, 1000);
-    let total = (scroller.scrollTop = scrollStart + stepScroll);
-    if (total < top) {
-      requestAnimationFrame(step);
+    if (top > scrollStart) {
+      let stepScroll = tween.linear(
+        timestamp - start,
+        0,
+        top - scrollStart,
+        200,
+      );
+      // console.log(stepScroll,'stepScroll');
+      let total = (scroller.scrollTop = scrollStart + stepScroll);
+      if (total < top) {
+        requestAnimationFrame(step);
+      }
+    } else {
+      let stepScroll = tween.linear(
+        timestamp - start,
+        0,
+        scrollStart - top,
+        200,
+      );
+      let total = (scroller.scrollTop = scrollStart - stepScroll);
+      if (total > top) {
+        requestAnimationFrame(step);
+      }
     }
   };
   requestAnimationFrame(step);

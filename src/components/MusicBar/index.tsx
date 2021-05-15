@@ -14,7 +14,7 @@ import { MusicContext } from '@/app';
 // }
 
 const MusicBar = () => {
-  const { innerAudioContext, setMusicInfo, musicInfo, isPlay } =
+  const { innerAudioContext, setMusicInfo, musicInfo, isPlay, isPlayListOpen } =
     useContext(MusicContext);
 
   const { musicName, author = [], albumPicUrl } = musicInfo;
@@ -29,8 +29,8 @@ const MusicBar = () => {
   };
 
   const handleMusicBar = () => {
-    Taro.navigateTo({url:'/pages/musicDetail/musicDetail'})
-  }
+    Taro.navigateTo({ url: '/pages/musicDetail/musicDetail' });
+  };
 
   return (
     <View
@@ -53,7 +53,14 @@ const MusicBar = () => {
           className={styles.icon}
           onClick={handlePlay}
         />
-        <Image src={list} className={styles.icon} />
+        <Image
+          src={list}
+          className={styles.icon}
+          onClick={(e) => {
+            e.stopPropagation();
+            setMusicInfo({ isPlayListOpen: !isPlayListOpen });
+          }}
+        />
       </View>
     </View>
   );

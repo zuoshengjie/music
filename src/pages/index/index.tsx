@@ -12,6 +12,7 @@ const Index = () => {
   const [searchValue, setSearchValue] = useState('');
   const [current, setCurrent] = useState(0);
 
+
   const { innerAudioContext, setMusicInfo, musicInfo, isPlay } =
     useContext(MusicContext);
 
@@ -42,7 +43,7 @@ const Index = () => {
       url = u;
     }
     innerAudioContext.src = url;
-    setMusicInfo({ musicInfo: detail });
+    setMusicInfo({ musicInfo: { ...detail, url } });
   };
 
   return (
@@ -59,25 +60,39 @@ const Index = () => {
         tabList={musicTypeList}
         onClick={setCurrent}
       >
-        <AtTabsPane current={current} index={0}>
-          <MusicList
-            service={(params, pageNum) => service(params, pageNum, 'mg')}
-            params={searchValue}
-            onItemClick={handleItemClick}
-            type="mg"
-          />
-        </AtTabsPane>
-        <AtTabsPane current={current} index={1}>
-          <View>酷我音乐</View>
-        </AtTabsPane>
-        <AtTabsPane current={current} index={2}>
-          <MusicList
-            service={(params, pageNum) => service(params, pageNum, 'wyy')}
-            params={searchValue}
-            onItemClick={handleItemClick}
-            type="wyy"
-          />
-        </AtTabsPane>
+        {musicTypeList.map((item, index) => {
+          return (
+            <AtTabsPane current={current} index={index} key={item.key}>
+              <MusicList
+                service={(params, pageNum) =>
+                  service(params, pageNum, item.key)
+                }
+                params={searchValue}
+                onItemClick={handleItemClick}
+                type={item.key}
+              />
+            </AtTabsPane>
+          );
+        })}
+        {/*<AtTabsPane current={current} index={0}>*/}
+        {/*  <MusicList*/}
+        {/*    service={(params, pageNum) => service(params, pageNum, 'mg')}*/}
+        {/*    params={searchValue}*/}
+        {/*    onItemClick={handleItemClick}*/}
+        {/*    type="mg"*/}
+        {/*  />*/}
+        {/*</AtTabsPane>*/}
+        {/*<AtTabsPane current={current} index={1}>*/}
+        {/*  <View>酷我音乐</View>*/}
+        {/*</AtTabsPane>*/}
+        {/*<AtTabsPane current={current} index={2}>*/}
+        {/*  <MusicList*/}
+        {/*    service={(params, pageNum) => service(params, pageNum, 'wyy')}*/}
+        {/*    params={searchValue}*/}
+        {/*    onItemClick={handleItemClick}*/}
+        {/*    type="wyy"*/}
+        {/*  />*/}
+        {/*</AtTabsPane>*/}
       </AtTabs>
       <MusicBar />
     </View>

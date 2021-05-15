@@ -7,13 +7,17 @@ export default {
   tabBar: {
     list: [{
       pagePath: 'pages/index/index',
+      iconPath:'./assets/images/ss.png',
+      selectedIconPath:'./assets/images/ss1.png',
       text: '搜索'
     }, {
       pagePath: 'pages/my/my',
+      iconPath:'./assets/images/wd.png',
+      selectedIconPath:'./assets/images/wd1.png',
       text: '我的'
     }],
-    'color': '#000',
-    'selectedColor': '#56abe4',
+    'color': '#9b9b9b',
+    'selectedColor': '#31c27c',
     'backgroundColor': '#fff',
     'borderStyle': 'white'
   },

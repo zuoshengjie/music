@@ -9,6 +9,7 @@ const transList = (list) => {
     id: item.id,
     author: item.ar,
     albumPicUrl: item.al.picUrl,
+    bigPicUrl:item.al.picUrl,
     albumName: item.al.name,
     albumId: item.al.id,
     cid: item.id,
@@ -39,7 +40,7 @@ const wyyRequest = (params) => {
 export const search = (keyword: string, pageNo: number = 1) => {
   return wyyRequest({
     url: `/wyy/cloudsearch`,
-    data: { keywords: keyword, offset: pageNo * 20, limit: 20 },
+    data: { keywords: keyword, offset: (pageNo - 1) * 20, limit: 20 },
   }).then(({ result }) => {
     const { songCount, songs } = result;
     return { total: songCount, list: transList(songs || []) };
@@ -57,7 +58,9 @@ export const getSongUrl = (id: number) => {
 
 export const getSongDetail = (cid: number) => {
   return wyyRequest({
-    url: `/lyric`,
+    url: `/wyy/lyric`,
     data: { id: cid },
+  }).then(res => {
+    return {lyric:res.lrc.lyric}
   })
 };

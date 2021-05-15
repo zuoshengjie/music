@@ -1,8 +1,11 @@
+import Taro from '@tarojs/taro';
 import React, { Component } from 'react';
 import { createInnerAudioContext } from '@/components/createInnerAudioContext';
 import 'default-passive-events';
-import 'taro-ui/dist/style/index.scss';
+import './custom-variables.scss';
 import './app.less';
+import PlayList from '@/components/PlayList';
+import { play } from '@/assets/images';
 
 const innerAudioContext = createInnerAudioContext();
 
@@ -18,6 +21,10 @@ class App extends Component {
     innerAudioContext.autoplay = true;
     innerAudioContext.onPlay(() => {
       console.log('播放');
+      const musicInfo = Taro.getStorageSync('currentMusicInfo');
+      if (musicInfo?.id !== this.state.musicInfo?.id) {
+        Taro.setStorageSync('currentMusicInfo', this.state.musicInfo);
+      }
       this.setState({ isPlay: true });
     });
     innerAudioContext.onPause(() => {
@@ -37,17 +44,43 @@ class App extends Component {
     this.setMusicInfo = (v) => {
       this.setState(v);
     };
+
     this.state = {
       musicInfo: {},
       innerAudioContext,
       isPlay: false,
       setMusicInfo: this.setMusicInfo,
+      playList: [],
+      isPlayListOpen: false,
     };
   }
 
   componentDidMount() {
     const vh = window.innerHeight;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
+    document.documentElement.style.setProperty('--color-brand', `#31c27c`);
+    if (!Object.keys(this.state.musicInfo).length) {
+      const info = Taro.getStorageSync('currentMusicInfo');
+      if (!info?.url) {
+        return;
+      }
+      innerAudioContext.src = info.url;
+      this.setState({ musicInfo: info });
+    }
+    const pl = Taro.getStorageSync('playList');
+    if (!this.state.playList.length && pl?.length) {
+      this.setState({ playList: pl });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.playList) !==
+        JSON.stringify(prevState.playList) &&
+      prevState.playList.length
+    ) {
+      Taro.setStorageSync('playList', prevState.playList);
+    }
   }
 
   componentDidShow() {}
@@ -61,6 +94,7 @@ class App extends Component {
     return (
       <MusicContext.Provider value={this.state}>
         {this.props.children}
+        <PlayList isOpened={this.state.isPlayListOpen} />
       </MusicContext.Provider>
     );
   }
