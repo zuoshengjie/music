@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { View, Slider, Text, Image } from '@tarojs/components';
 import { musicTypeService } from '@/utils/music/musicTypeList';
-import { MusicContext } from '@/app';
+import  MusicContext from '../../MusicContext';
 import { format, scrollToView } from '@/utils/utils';
 import {
   lbxh,

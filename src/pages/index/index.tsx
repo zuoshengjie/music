@@ -3,7 +3,7 @@ import { View } from '@tarojs/components';
 import { AtSearchBar, AtTabs, AtTabsPane, AtMessage } from 'taro-ui';
 import MusicBar from '@/components/MusicBar';
 import MusicList from '@/components/MusicList';
-import { MusicContext } from '@/app';
+import MusicContext from '../../MusicContext';
 import { musicTypeList, musicTypeService } from '@/utils/music/musicTypeList';
 import styles from './index.module.less';
 
@@ -47,7 +47,7 @@ const Index = () => {
   };
 
   return (
-    <View className={styles.index}>
+    <View className={styles.index} enable-flex="true">
       <AtMessage />
       <AtSearchBar
         value={searchInputValue}

@@ -4,8 +4,8 @@ import { View, ScrollView, Text, Image } from '@tarojs/components';
 import { AtActivityIndicator } from 'taro-ui';
 import { video } from '@/assets/images';
 import { useUpdateEffect, useLockFn, useDebounceFn } from 'ahooks';
+import MusicContext from '../../MusicContext';
 import styles from './index.module.less';
-import { MusicContext } from '@/app';
 
 const MusicList = (props) => {
   const { service, params, onItemClick, type, data, height } = props;
@@ -86,6 +86,7 @@ const MusicList = (props) => {
       style={{ height }}
       // onScrollToLower={onScrollToLower}
       // lowerThreshold={300}
+      enableFlex
     >
       {list.length
         ? list.map((item: any, index) => {

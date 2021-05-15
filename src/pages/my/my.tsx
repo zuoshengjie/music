@@ -4,7 +4,7 @@ import { View, Text, Input } from '@tarojs/components';
 import { avatar } from '@/assets/images';
 import { AtAvatar, AtTabs, AtTabsPane, AtButton } from 'taro-ui';
 import MusicList from '@/components/MusicList';
-import { MusicContext } from '@/app';
+import  MusicContext from '../../MusicContext';
 import { musicTypeService } from '@/utils/music/musicTypeList';
 import MusicBar from '@/components/MusicBar';
 import styles from './index.module.less';

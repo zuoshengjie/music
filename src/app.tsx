@@ -5,16 +5,18 @@ import 'default-passive-events';
 import './custom-variables.scss';
 import './app.less';
 import PlayList from '@/components/PlayList';
+import MusicContext,{innerAudioContext} from './MusicContext';
 import { play } from '@/assets/images';
 
-const innerAudioContext = createInnerAudioContext();
+// const innerAudioContext = Taro.createInnerAudioContext();
 
-export const MusicContext = React.createContext({
-  innerAudioContext,
-  musicInfo: {},
-  setMusicInfo: () => {},
-});
+// export const MusicContext = React.createContext({
+//   innerAudioContext,
+//   musicInfo: {},
+//   setMusicInfo: () => {},
+// });
 
+console.log(MusicContext,'MusicContext')
 class App extends Component {
   constructor(props) {
     super(props);

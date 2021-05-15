@@ -3,7 +3,7 @@ import { useState, useContext } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import { play, stop, list } from '@/assets/images';
 import styles from './index.module.less';
-import { MusicContext } from '@/app';
+import MusicContext from '../../MusicContext';
 
 // interface MusicBarProps {
 //   musicName: string;

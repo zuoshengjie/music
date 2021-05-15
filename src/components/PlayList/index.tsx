@@ -4,13 +4,15 @@ import { AtFloatLayout } from 'taro-ui';
 import { View } from '@tarojs/components';
 import { play, stop, list } from '@/assets/images';
 import styles from './index.module.less';
-import { MusicContext } from '@/app';
+import MusicContext from '../../MusicContext';
 import MusicList from '@/components/MusicList';
 import { musicTypeService } from '@/utils/music/musicTypeList';
 
 interface PlayListProps {
   isOpened: boolean;
 }
+
+console.log(MusicContext,'MusicContext333')
 
 const PlayList = ({ isOpened }: PlayListProps) => {
   const {
