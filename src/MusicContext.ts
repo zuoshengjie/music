@@ -1,11 +1,21 @@
 import Taro from '@tarojs/taro';
 import React from 'react';
 
-export const innerAudioContext = Taro.createInnerAudioContext();
+console.log(Taro.getEnv(), 'Taro.getEnv()')
+
+let audioContext
+if (Taro.getEnv() === 'WEAPP') {
+  audioContext = Taro.getBackgroundAudioManager();
+} else if (Taro.getEnv() === 'WEB') {
+  audioContext = Taro.createInnerAudioContext();
+}
+
+export {
+  audioContext as innerAudioContext
+}
 
 export default React.createContext({
-    innerAudioContext,
-    musicInfo: {},
-    setMusicInfo: () => {},
-  });
-  
+  innerAudioContext: audioContext,
+  musicInfo: {},
+  setMusicInfo: () => { },
+});

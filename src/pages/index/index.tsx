@@ -1,4 +1,5 @@
-﻿import { useState, useContext } from 'react';
+﻿import Taro from '@tarojs/taro';
+import { useState, useContext } from 'react';
 import { View } from '@tarojs/components';
 import { AtSearchBar, AtTabs, AtTabsPane, AtMessage } from 'taro-ui';
 import MusicBar from '@/components/MusicBar';
@@ -6,6 +7,8 @@ import MusicList from '@/components/MusicList';
 import MusicContext from '../../MusicContext';
 import { musicTypeList, musicTypeService } from '@/utils/music/musicTypeList';
 import styles from './index.module.less';
+
+const style = { '--color-brand': 'red' }
 
 const Index = () => {
   const [searchInputValue, setSearchInputValue] = useState('');
@@ -37,11 +40,15 @@ const Index = () => {
   };
 
   const handleItemClick = async (detail, _, type) => {
-    let { url } = detail;
+    let { url, musicName, author, albumPicUrl, albumName  } = detail;
     if (!url) {
       const u = await musicTypeService[type].getSongUrl(detail.id);
       url = u;
     }
+    innerAudioContext.title = musicName
+    innerAudioContext.epname = albumName
+    innerAudioContext.singer = author
+    innerAudioContext.coverImgUrl = albumPicUrl
     innerAudioContext.src = url;
     setMusicInfo({ musicInfo: { ...detail, url } });
   };

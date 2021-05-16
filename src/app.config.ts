@@ -4,6 +4,7 @@ export default {
     'pages/my/my',
     'pages/musicDetail/musicDetail',
   ],
+  requiredBackgroundModes: ['audio'],
   tabBar: {
     list: [{
       pagePath: 'pages/index/index',
@@ -25,6 +26,7 @@ export default {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: 'WeChat',
-    navigationBarTextStyle: 'black'
+    navigationBarTextStyle: 'black',
+    // navigationStyle: "custom"
   }
 }

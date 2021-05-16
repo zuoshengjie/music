@@ -37,7 +37,7 @@ const mgRequest = (params) => {
 
 export const search = (keyword: string, pageNo: number = 1) => {
   return mgRequest({
-    url: `/mg/search`,
+    url: `https://zsjymy.top:3500/mg/search`,
     data: { keyword, pageNo },
   }).then((res) => {
     return { ...res, list: transList(res.list || []) };

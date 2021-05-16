@@ -39,7 +39,7 @@ const wyyRequest = (params) => {
 
 export const search = (keyword: string, pageNo: number = 1) => {
   return wyyRequest({
-    url: `/wyy/cloudsearch`,
+    url: `https://zsjymy.top:3500/wyy/cloudsearch`,
     data: { keywords: keyword, offset: (pageNo - 1) * 20, limit: 20 },
   }).then(({ result }) => {
     const { songCount, songs } = result;

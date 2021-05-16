@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
 import React, { Component } from 'react';
 import { createInnerAudioContext } from '@/components/createInnerAudioContext';
+import { View, ScrollView, Text, Image } from '@tarojs/components';
 import 'default-passive-events';
 import './custom-variables.scss';
 import './app.less';
@@ -15,12 +16,15 @@ import { play } from '@/assets/images';
 //   musicInfo: {},
 //   setMusicInfo: () => {},
 // });
+const style = { '--color-brand': 'red' }
 
-console.log(MusicContext,'MusicContext')
+console.log(innerAudioContext,'innerAudioContext')
 class App extends Component {
   constructor(props) {
     super(props);
-    innerAudioContext.autoplay = true;
+    if (Taro.getEnv() === 'WEB'){
+      innerAudioContext.autoplay = true;
+    }
     innerAudioContext.onPlay(() => {
       console.log('播放');
       const musicInfo = Taro.getStorageSync('currentMusicInfo');
