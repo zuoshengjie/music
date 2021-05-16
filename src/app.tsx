@@ -1,9 +1,8 @@
 import Taro from '@tarojs/taro';
 import { Component } from 'react';
 import 'default-passive-events';
-import PlayList from '@/components/PlayList';
 import MusicContext,{innerAudioContext} from './MusicContext';
-
+import { getWindowHeight } from '@/utils/utils'
 import './custom-variables.scss';
 import './app.less';
 
@@ -53,9 +52,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const vh = window.innerHeight;
+    let vh = getWindowHeight();
     this.setState((prev) => ({
-      style:{...prev.style,'--vh':`${vh}px`}
+      style:{...prev.style,'--vh':`${vh}`}
     }))
     if (!Object.keys(this.state.musicInfo).length) {
       const info = Taro.getStorageSync('currentMusicInfo');
@@ -63,6 +62,10 @@ class App extends Component {
         return;
       }
       innerAudioContext.src = info.url;
+      innerAudioContext.title = info.musicName;
+      innerAudioContext.epname = info.albumName;
+      innerAudioContext.singer = info.author;
+      innerAudioContext.coverImgUrl = info.albumPicUrl;
       this.setState({ musicInfo: info });
     }
     const pl = Taro.getStorageSync('playList');
@@ -92,7 +95,6 @@ class App extends Component {
     return (
       <MusicContext.Provider value={this.state}>
         {this.props.children}
-        <PlayList isOpened={this.state.isPlayListOpen} />
       </MusicContext.Provider>
     );
   }

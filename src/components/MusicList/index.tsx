@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { View, ScrollView, Text, Image } from '@tarojs/components';
 import { AtActivityIndicator } from 'taro-ui';
 import { mv } from '@/assets/images';
@@ -8,11 +8,13 @@ import MusicContext from '../../MusicContext';
 import styles from './index.module.less';
 
 const MusicList = (props) => {
-  const { service, params, onItemClick, type, data, height } = props;
+  const { service, params, onItemClick, type, data, height, id } = props;
   const [pageNo, setPageNo] = useState(1);
   const [list, setList] = useState(data || []);
   const [isNoMore, setIsNoMore] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const scrollListHeight = useRef(0);
 
   const { musicInfo, style } = useContext(MusicContext);
 
@@ -49,12 +51,32 @@ const MusicList = (props) => {
     setList(data || []);
   }, [data]);
 
+  useLayoutEffect(() =>{
+    setTimeout(() => {
+      if (Taro.getEnv() === 'WEAPP'){
+        Taro.createSelectorQuery().select(`#${id}`).fields({ size: true,},function (res){
+          scrollListHeight.current = res.height
+        }).exec()
+      }else if(Taro.getEnv() === 'WEB'){
+        scrollListHeight.current = document.getElementById(id).clientHeight;
+      }
+    },1000)
+  },[])
+
   const onScroll = async (e) => {
-    if (data?.length || !params) {
+    if (data?.length) {
       return;
     }
+    // if (Taro.getEnv() === 'WEAPP'){
+    //   Taro.createSelectorQuery().select(`#${id}`).boundingClientRect(function (res){
+    //     console.log(res,'res2222')
+    //     scrollListHeight.current = res.height
+    //   }).exec()
+    // }else if(Taro.getEnv() === 'WEB'){
+    //   scrollListHeight.current = document.getElementById(id).clientHeight;
+    // }
     const { scrollTop, scrollHeight } = e.detail;
-    if (scrollTop >= scrollHeight - e.target.clientHeight - 300) {
+    if (scrollTop >= scrollHeight - scrollListHeight.current - 300) {
       debounceGetData();
     }
   };
@@ -87,6 +109,7 @@ const MusicList = (props) => {
       // onScrollToLower={onScrollToLower}
       // lowerThreshold={300}
       enableFlex
+      id={id}
     >
       {list.length
         ? list.map((item: any, index) => {

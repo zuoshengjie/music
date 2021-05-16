@@ -2,8 +2,6 @@ import Taro from '@tarojs/taro';
 import React from 'react';
 import { createInnerAudioContext } from '@/components/createInnerAudioContext';
 
-console.log(Taro.getEnv(), 'Taro.getEnv()')
-
 let audioContext
 if (Taro.getEnv() === 'WEAPP') {
   audioContext = Taro.getBackgroundAudioManager();

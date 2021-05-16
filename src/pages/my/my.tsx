@@ -8,6 +8,7 @@ import MusicContext from '../../MusicContext';
 import { musicTypeService } from '@/utils/music/musicTypeList';
 import { themeColorList } from '@/utils/utils';
 import MusicBar from '@/components/MusicBar';
+import PlayList from '@/components/PlayList';
 import styles from './index.module.less';
 
 const My = () => {
@@ -15,7 +16,7 @@ const My = () => {
   const [current, setCurrent] = useState(0);
   const [latelyMusic, setLatelyMusic] = useState([]);
   const [themeIndex, setThemeIndex] = useState(0);
-  const { innerAudioContext, setMusicInfo, style } = useContext(MusicContext);
+  const { innerAudioContext, setMusicInfo, isPlayListOpen, style } = useContext(MusicContext);
 
   useDidShow(() => {
     setLatelyMusic(Taro.getStorageSync('lately') || []);
@@ -61,14 +62,14 @@ const My = () => {
   };
 
   useEffect(() => {
-    if (Taro.getEnv() === 'WEAPP'){
-      Taro.getUserProfile({
-        desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-        success: (res) => {
-          console.log(res,'res');
-        }
-      })
-    }
+    // if (Taro.getEnv() === 'WEAPP'){
+    //   Taro.getUserProfile({
+    //     desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+    //     success: (res) => {
+    //       console.log(res,'res');
+    //     }
+    //   })
+    // }
   },[])
 
   return (
@@ -95,6 +96,7 @@ const My = () => {
             height='auto'
             data={latelyMusic}
             onItemClick={handleItemClick}
+            id={'wd-scroll-list'}
           />
         </AtTabsPane>
         <AtTabsPane current={current} index={1}>
@@ -137,6 +139,7 @@ const My = () => {
         </AtTabsPane>
       </AtTabs>
       <MusicBar />
+      <PlayList isOpened={isPlayListOpen} />
     </View>
   );
 };

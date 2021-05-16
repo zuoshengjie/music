@@ -1,5 +1,5 @@
-const mg = 'https://zsjymy.top:3500/mg';
-const wyy = 'https://zsjymy.top:3500/wyy';
+const mg = '"https://zsjymy.top:3500/mg"';
+const wyy = '"https://zsjymy.top:3500/wyy"';
 
 const isH5 = process.env.TARO_ENV === 'h5';
 

@@ -1,8 +1,10 @@
-﻿import { useState, useContext } from 'react';
+﻿import Taro from '@tarojs/taro';
+import { useState, useContext, useMemo } from 'react';
 import { View } from '@tarojs/components';
 import { AtSearchBar, AtTabs, AtTabsPane, AtMessage } from 'taro-ui';
 import MusicBar from '@/components/MusicBar';
 import MusicList from '@/components/MusicList';
+import PlayList from '@/components/PlayList';
 import MusicContext from '../../MusicContext';
 import { musicTypeList, musicTypeService } from '@/utils/music/musicTypeList';
 import styles from './index.module.less';
@@ -12,7 +14,7 @@ const Index = () => {
   const [searchValue, setSearchValue] = useState('');
   const [current, setCurrent] = useState(0);
 
-  const { innerAudioContext, setMusicInfo, musicInfo, style } =
+  const { innerAudioContext, setMusicInfo, musicInfo, isPlayListOpen, style } =
     useContext(MusicContext);
 
   const handleSearch = () => {
@@ -49,6 +51,14 @@ const Index = () => {
     setMusicInfo({ musicInfo: { ...detail, url } });
   };
 
+  const h = useMemo(() => {
+    if (Taro.getEnv() === 'WEAPP') {
+      return `calc(var(--vh, 100vh) - 94PX${Object.keys(musicInfo).length ? ' - 55px' : ''})`
+    }else if(Taro.getEnv() === 'WEB'){
+      return `calc(var(--vh, 100vh) - 94PX - 53px${Object.keys(musicInfo).length ? ' - 55px' : ''})`
+    }
+  }, [musicInfo])
+
   return (
     <View className={styles.index} style={style}>
       <AtMessage />
@@ -73,15 +83,16 @@ const Index = () => {
                 params={searchValue}
                 onItemClick={handleItemClick}
                 type={item.key}
-                height={`calc(var(--vh, 100vh) - 94PX - 53PX${
-                  Object.keys(musicInfo).length ? ' - 55px' : ''
-                })`}
+                height={h}
+                id={`${item.key}-scroll-list`}
               />
             </AtTabsPane>
           );
         })}
       </AtTabs>
       <MusicBar />
+      <PlayList isOpened={isPlayListOpen} />
+
     </View>
   );
 };

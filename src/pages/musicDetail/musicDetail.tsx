@@ -1,9 +1,10 @@
 import Taro from '@tarojs/taro';
-import { useState, useEffect, useContext, useRef } from 'react';
-import { View, Slider, Text, Image } from '@tarojs/components';
+import { useState, useEffect, useContext } from 'react';
+import { View, Slider, Text, Image, ScrollView  } from '@tarojs/components';
 import { musicTypeService } from '@/utils/music/musicTypeList';
 import  MusicContext from '../../MusicContext';
-import { format, scrollToView } from '@/utils/utils';
+import { format } from '@/utils/utils';
+import PlayList from '@/components/PlayList';
 import {
   lbxh,
   dqxh,
@@ -27,7 +28,6 @@ const MusicDetail = () => {
   const [lyricCurrent, setLyricCurrent] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [bflx, setBflx] = useState(0);
-  const lyricRef = useRef(0);
   const {
     innerAudioContext,
     setMusicInfo,
@@ -86,12 +86,13 @@ const MusicDetail = () => {
       setCurrentTime(Math.floor(ct));
       if (c) {
         setLyricCurrent(c);
-        scrollToView(lyricRef.current, Math.max(40 * c - 100, 0));
       }
     };
     innerAudioContext.onTimeUpdate(update);
     return () => {
-      innerAudioContext.offTimeUpdate(update);
+      if (Taro.getEnv() === 'WEB'){
+        innerAudioContext.offTimeUpdate(update);
+      }
     };
   }, [lyric]);
 
@@ -131,7 +132,10 @@ const MusicDetail = () => {
       mu = u;
     }
     innerAudioContext.src = mu;
-
+    innerAudioContext.title = d.musicName;
+    innerAudioContext.epname = d.albumName;
+    innerAudioContext.singer = d.author;
+    innerAudioContext.coverImgUrl = d.albumPicUrl;
     setMusicInfo({ musicInfo: { ...d, url: mu } });
   };
 
@@ -164,7 +168,7 @@ const MusicDetail = () => {
           {author.map((item) => item.name)}
         </View>
         <Image src={bigPicUrl} className={styles['music-pic']} />
-        <View className={styles['music-lyric']} ref={lyricRef}>
+        <ScrollView className={styles['music-lyric']} scrollY scrollTop={Math.max(40 * lyricCurrent - 100, 0)} scrollWithAnimation>
           <View className={styles['lyric-box']}>
             {lyricList.map((item, i) => {
               return (
@@ -189,7 +193,7 @@ const MusicDetail = () => {
               );
             })}
           </View>
-        </View>
+        </ScrollView>
 
         <View className={styles['control-bottom']}>
           <View className={styles.progress}>
@@ -218,11 +222,13 @@ const MusicDetail = () => {
               src={sys1}
               onClick={() => handleJumpClick('prev')}
             />
+            <View className={styles.play}>
             <Image
-              className={styles.play}
+            className={styles['play-icon']}
               src={isPlay ? zt : bf}
               onClick={handlePlay}
             />
+            </View>
             <Image
               className={styles.control}
               src={xys1}
@@ -236,6 +242,7 @@ const MusicDetail = () => {
           </View>
         </View>
       </View>
+      <PlayList isOpened={isPlayListOpen} />
     </View>
   );
 };

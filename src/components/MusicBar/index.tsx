@@ -2,8 +2,11 @@ import Taro from '@tarojs/taro';
 import { useState, useContext } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import { play, stop, list } from '@/assets/images';
-import styles from './index.module.less';
 import MusicContext from '../../MusicContext';
+import PlayList from '@/components/PlayList';
+
+import styles from './index.module.less';
+
 
 // interface MusicBarProps {
 //   musicName: string;
@@ -32,10 +35,14 @@ const MusicBar = () => {
     Taro.navigateTo({ url: '/pages/musicDetail/musicDetail' });
   };
 
+  const handleList = (e) => {
+    e.stopPropagation();
+    setMusicInfo({ isPlayListOpen: !isPlayListOpen });
+  }
   return (
     <View
       className={styles['music-bar']}
-      style={{ display: musicName ? 'flex' : 'none' }}
+      style={{ display: musicName ? 'flex' : 'none',bottom:Taro.getEnv() === 'WEAPP' ? '0px' : '53px' }}
       onClick={handleMusicBar}
     >
       <View className={styles['music-bar-left']}>
@@ -56,12 +63,10 @@ const MusicBar = () => {
         <Image
           src={list}
           className={styles.icon}
-          onClick={(e) => {
-            e.stopPropagation();
-            setMusicInfo({ isPlayListOpen: !isPlayListOpen });
-          }}
+          onClick={handleList}
         />
       </View>
+      {/* <PlayList isOpened={isPlayListOpen} /> */}
     </View>
   );
 };
