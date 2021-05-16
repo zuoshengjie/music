@@ -1,24 +1,14 @@
 import Taro from '@tarojs/taro';
-import React, { Component } from 'react';
-import { createInnerAudioContext } from '@/components/createInnerAudioContext';
-import { View, ScrollView, Text, Image } from '@tarojs/components';
+import { Component } from 'react';
 import 'default-passive-events';
-import './custom-variables.scss';
-import './app.less';
 import PlayList from '@/components/PlayList';
 import MusicContext,{innerAudioContext} from './MusicContext';
-import { play } from '@/assets/images';
 
-// const innerAudioContext = Taro.createInnerAudioContext();
+import './custom-variables.scss';
+import './app.less';
 
-// export const MusicContext = React.createContext({
-//   innerAudioContext,
-//   musicInfo: {},
-//   setMusicInfo: () => {},
-// });
-const style = { '--color-brand': 'red' }
+const style = { '--color-brand': '#31c27c' }
 
-console.log(innerAudioContext,'innerAudioContext')
 class App extends Component {
   constructor(props) {
     super(props);
@@ -58,13 +48,15 @@ class App extends Component {
       setMusicInfo: this.setMusicInfo,
       playList: [],
       isPlayListOpen: false,
+      style
     };
   }
 
   componentDidMount() {
     const vh = window.innerHeight;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    document.documentElement.style.setProperty('--color-brand', `#31c27c`);
+    this.setState((prev) => ({
+      style:{...prev.style,'--vh':`${vh}px`}
+    }))
     if (!Object.keys(this.state.musicInfo).length) {
       const info = Taro.getStorageSync('currentMusicInfo');
       if (!info?.url) {

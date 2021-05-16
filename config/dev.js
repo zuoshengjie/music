@@ -1,19 +1,27 @@
+const mg = 'https://zsjymy.top:3500/mg';
+const wyy = 'https://zsjymy.top:3500/wyy';
+
+const isH5 = process.env.TARO_ENV === 'h5';
+
 module.exports = {
   env: {
     NODE_ENV: '"development"',
   },
-  defineConstants: {},
+  defineConstants: {
+    MG: isH5 ? '"/mg"' : mg,
+    WYY: isH5 ? '"/wyy"' : wyy,
+  },
   mini: {},
   h5: {
     devServer: {
       proxy: {
         '/mg': {
-          target: 'http://zsjymy.top:3400',
-          pathRewrite: { '^/mg': '' },
+          target: 'https://zsjymy.top:3500',
+          pathRewrite: { '^/mg': '/mg' },
         },
         '/wyy': {
-          target: 'http://zsjymy.top:3401',
-          pathRewrite: { '^/wyy': '' },
+          target: 'https://zsjymy.top:3500',
+          pathRewrite: { '^/wyy': '/wyy' },
         },
       },
     },

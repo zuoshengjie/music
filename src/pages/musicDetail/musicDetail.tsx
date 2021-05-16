@@ -7,7 +7,6 @@ import { format, scrollToView } from '@/utils/utils';
 import {
   lbxh,
   dqxh,
-  sys,
   bf,
   zt,
   xys1,
@@ -36,18 +35,17 @@ const MusicDetail = () => {
     isPlay,
     playList,
     isPlayListOpen,
+    style
   } = useContext(MusicContext);
 
   const {
     musicName,
     author = [],
-    albumPicUrl,
     musicType,
     cid,
     bigPicUrl,
     lyric = '',
     id,
-    url,
   } = musicInfo;
 
   useEffect(() => {
@@ -153,7 +151,7 @@ const MusicDetail = () => {
   },[bflx])
 
   return (
-    <View className={styles['music-detail']}>
+    <View className={styles['music-detail']} style={style}>
       <View
         className={styles['music-detail-bg']}
         style={{ backgroundImage: `url(${bigPicUrl})` }}
@@ -199,8 +197,8 @@ const MusicDetail = () => {
             <Slider
               className={styles['progress-bar']}
               blockSize={12}
-              activeColor="#fff"
-              backgroundColor="#696969"
+              activeColor='#fff'
+              backgroundColor='#696969'
               step={1}
               value={Math.floor(currentTime)}
               max={Math.floor(innerAudioContext.duration)}

@@ -12,6 +12,7 @@ import sys1 from './sys1.png';
 import dqxh from './dqxh.png';
 import lbxh from './lbxh.png';
 import sj from './sj.png';
+import mv from './mv.png';
 
 import sjbf1 from './sjbf1.png';
 import bfdl from './bfdl.png';
@@ -36,5 +37,5 @@ export {
   zt,
   bfdl,
   ss,
-  wd,
+  wd, mv
 };

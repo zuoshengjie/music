@@ -39,7 +39,7 @@ const wyyRequest = (params) => {
 
 export const search = (keyword: string, pageNo: number = 1) => {
   return wyyRequest({
-    url: `https://zsjymy.top:3500/wyy/cloudsearch`,
+    url: `${WYY}/cloudsearch`,
     data: { keywords: keyword, offset: (pageNo - 1) * 20, limit: 20 },
   }).then(({ result }) => {
     const { songCount, songs } = result;
@@ -49,7 +49,7 @@ export const search = (keyword: string, pageNo: number = 1) => {
 
 export const getSongUrl = (id: number) => {
   return wyyRequest({
-    url: `/wyy/song/url`,
+    url: `${WYY}/song/url`,
     data: { id },
   }).then((res) => {
     return res.data[0].url;
@@ -58,7 +58,7 @@ export const getSongUrl = (id: number) => {
 
 export const getSongDetail = (cid: number) => {
   return wyyRequest({
-    url: `/wyy/lyric`,
+    url: `${WYY}/lyric`,
     data: { id: cid },
   }).then(res => {
     return {lyric:res.lrc.lyric}

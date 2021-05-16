@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import { useContext, useEffect, useState } from 'react';
 import { View, ScrollView, Text, Image } from '@tarojs/components';
 import { AtActivityIndicator } from 'taro-ui';
-import { video } from '@/assets/images';
+import { mv } from '@/assets/images';
 import { useUpdateEffect, useLockFn, useDebounceFn } from 'ahooks';
 import MusicContext from '../../MusicContext';
 import styles from './index.module.less';
@@ -14,7 +14,7 @@ const MusicList = (props) => {
   const [isNoMore, setIsNoMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { musicInfo } = useContext(MusicContext);
+  const { musicInfo, style } = useContext(MusicContext);
 
   const getData = useLockFn(async (pageN) => {
     setLoading(true);
@@ -50,7 +50,7 @@ const MusicList = (props) => {
   }, [data]);
 
   const onScroll = async (e) => {
-    if (data?.length) {
+    if (data?.length || !params) {
       return;
     }
     const { scrollTop, scrollHeight } = e.detail;
@@ -83,7 +83,7 @@ const MusicList = (props) => {
       scrollY
       showScrollbar
       onScroll={onScroll}
-      style={{ height }}
+      style={{ ...style,height }}
       // onScrollToLower={onScrollToLower}
       // lowerThreshold={300}
       enableFlex
@@ -118,18 +118,20 @@ const MusicList = (props) => {
                   </View>
                 </View>
                 {!!item.mvId && (
-                  <Image src={video} className={styles['video-icon']} />
+                  <Image src={mv} className={styles['video-icon']} />
                 )}
               </View>
             );
           })
         : !loading && <View className={styles.empty}>搜你所想~</View>}
-      <AtActivityIndicator
-        content="加载中"
-        size={32}
-        className={styles.loading}
-        isOpened={loading}
-      />
+      {
+        loading && <AtActivityIndicator
+            content='加载中'
+            size={32}
+            className={styles.loading}
+            isOpened={loading}
+        />
+      }
       {isNoMore && <View>到底了</View>}
     </ScrollView>
   );

@@ -37,7 +37,7 @@ const mgRequest = (params) => {
 
 export const search = (keyword: string, pageNo: number = 1) => {
   return mgRequest({
-    url: `https://zsjymy.top:3500/mg/search`,
+    url: `${MG}/search`,
     data: { keyword, pageNo },
   }).then((res) => {
     return { ...res, list: transList(res.list || []) };
@@ -46,7 +46,7 @@ export const search = (keyword: string, pageNo: number = 1) => {
 
 export const getSongUrl = (id: number) => {
   return mgRequest({
-    url: `/mg/song/url`,
+    url: `${MG}/song/url`,
     data: { id },
   }).then((res) => {
     return res.data;
@@ -55,7 +55,7 @@ export const getSongUrl = (id: number) => {
 
 export const getSongDetail = (cid: number) => {
   return mgRequest({
-    url: `/mg/song`,
+    url: `${MG}/song`,
     data: { cid },
   }).then((res) => {
     return { lyric: res.lyric, bigPicUrl: res.bigPicUrl };

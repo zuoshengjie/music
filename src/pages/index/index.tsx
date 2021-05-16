@@ -1,5 +1,4 @@
-﻿import Taro from '@tarojs/taro';
-import { useState, useContext } from 'react';
+﻿import { useState, useContext } from 'react';
 import { View } from '@tarojs/components';
 import { AtSearchBar, AtTabs, AtTabsPane, AtMessage } from 'taro-ui';
 import MusicBar from '@/components/MusicBar';
@@ -8,15 +7,12 @@ import MusicContext from '../../MusicContext';
 import { musicTypeList, musicTypeService } from '@/utils/music/musicTypeList';
 import styles from './index.module.less';
 
-const style = { '--color-brand': 'red' }
-
 const Index = () => {
   const [searchInputValue, setSearchInputValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [current, setCurrent] = useState(0);
 
-
-  const { innerAudioContext, setMusicInfo, musicInfo, isPlay } =
+  const { innerAudioContext, setMusicInfo, musicInfo, style } =
     useContext(MusicContext);
 
   const handleSearch = () => {
@@ -40,21 +36,21 @@ const Index = () => {
   };
 
   const handleItemClick = async (detail, _, type) => {
-    let { url, musicName, author, albumPicUrl, albumName  } = detail;
+    let { url, musicName, author, albumPicUrl, albumName } = detail;
     if (!url) {
       const u = await musicTypeService[type].getSongUrl(detail.id);
       url = u;
     }
-    innerAudioContext.title = musicName
-    innerAudioContext.epname = albumName
-    innerAudioContext.singer = author
-    innerAudioContext.coverImgUrl = albumPicUrl
+    innerAudioContext.title = musicName;
+    innerAudioContext.epname = albumName;
+    innerAudioContext.singer = author;
+    innerAudioContext.coverImgUrl = albumPicUrl;
     innerAudioContext.src = url;
     setMusicInfo({ musicInfo: { ...detail, url } });
   };
 
   return (
-    <View className={styles.index} enable-flex="true">
+    <View className={styles.index} style={style}>
       <AtMessage />
       <AtSearchBar
         value={searchInputValue}
@@ -77,29 +73,13 @@ const Index = () => {
                 params={searchValue}
                 onItemClick={handleItemClick}
                 type={item.key}
+                height={`calc(var(--vh, 100vh) - 94PX - 53PX${
+                  Object.keys(musicInfo).length ? ' - 55px' : ''
+                })`}
               />
             </AtTabsPane>
           );
         })}
-        {/*<AtTabsPane current={current} index={0}>*/}
-        {/*  <MusicList*/}
-        {/*    service={(params, pageNum) => service(params, pageNum, 'mg')}*/}
-        {/*    params={searchValue}*/}
-        {/*    onItemClick={handleItemClick}*/}
-        {/*    type="mg"*/}
-        {/*  />*/}
-        {/*</AtTabsPane>*/}
-        {/*<AtTabsPane current={current} index={1}>*/}
-        {/*  <View>酷我音乐</View>*/}
-        {/*</AtTabsPane>*/}
-        {/*<AtTabsPane current={current} index={2}>*/}
-        {/*  <MusicList*/}
-        {/*    service={(params, pageNum) => service(params, pageNum, 'wyy')}*/}
-        {/*    params={searchValue}*/}
-        {/*    onItemClick={handleItemClick}*/}
-        {/*    type="wyy"*/}
-        {/*  />*/}
-        {/*</AtTabsPane>*/}
       </AtTabs>
       <MusicBar />
     </View>

@@ -82,3 +82,15 @@ export function scrollToView(scroller: HTMLElement, top: number = 0) {
   };
   requestAnimationFrame(step);
 }
+
+export const themeColorList = [
+  { title: '默认', value: '#31c27c' },
+  { title: '拂晓蓝', value: 'rgb(24, 144, 255)' },
+  { title: '薄暮', value: 'rgb(245, 34, 45)' },
+  { title: '火山', value: 'rgb(250, 84, 28)' },
+  { title: '日暮', value: 'rgb(250, 173, 20)' },
+  { title: '明青', value: 'rgb(19, 194, 194)' },
+  { title: '极光绿', value: 'rgb(82, 196, 26)' },
+  { title: '极客蓝', value: 'rgb(47, 84, 235)' },
+  { title: '酱紫', value: 'rgb(114, 46, 209)' },
+];
