@@ -1,5 +1,7 @@
 import path from 'path';
 
+const isH5 = process.env.TARO_ENV === 'h5';
+
 const config = {
   framework: 'react',
   projectName: 'my-music',
@@ -14,6 +16,8 @@ const config = {
   outputRoot: 'dist',
   plugins: [],
   defineConstants: {
+    MG: isH5 ? '"/mg"' : mg,
+    WYY: isH5 ? '"/wyy"' : wyy,
   },
   alias: {
     '@/components': path.resolve(__dirname, '..', 'src/components'),
